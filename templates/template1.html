@@ -1,0 +1,14 @@
+<html>
+<head>
+    <body>
+        <ul>
+        {% for store in stores %}
+            <li> Name: {{store.name}} </li>
+            <li> Postcode: {{store.postcode}}  </li>
+            <li> Long: {{store.longitude}} </li>
+            <li> Lat: {{store.latitude}} </li>
+        {% endfor %}
+        </ul>
+    </body>
+</head>
+</html>

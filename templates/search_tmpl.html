@@ -1,0 +1,68 @@
+<h3> Search stores </h3>
+<p>Enter search query: </p>
+<input type="text" id="search_box" value="" placeholder="Search here"/>
+
+<h5> List of stores that match </h5>
+
+<ul id="store_list">
+
+</ul>
+
+<script type="text/javascript">
+    const store_list = document.querySelector('ul');
+
+    function debounce(func, wait = 100) {
+        // https://gist.github.com/peduarte/7ee475dd0fae1940f857582ecbb9dc5f
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          func.apply(this, args);
+        }, wait);
+      };
+    }
+
+    function input_handler(event) {
+        if (this.value.length < 2) {
+            return;
+        }
+        console.log('Hi!', this.value, event.type);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost:8000/search", true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            input: this.value
+        }));
+        xhr.onerror = function() {
+            console.log("** An error occurred during the transaction");
+            alert("An error occurred");
+        }
+        xhr.onload = function() {
+             var data = JSON.parse(this.responseText);
+             store_list.innerHTML = ''
+             if (typeof data !== 'object' || data === null) {
+                alert("Invalid message format");
+                return;
+             }
+             if (data.length == 0) {
+                store_list.innerHTML = '<b> No entries found </b>';
+                return;
+             }
+             for (elem of data) {
+                var new_li = document.createElement('li');
+                var lat, long
+                if ('latitude' in elem && 'longitude' in elem) {
+                    lat = elem.latitude
+                    long = elem.longitude
+                }
+                new_li.appendChild(document.createTextNode(elem.name + " , postcode " + elem.postcode + ", " + lat + " " + long));
+                store_list.appendChild(new_li);
+             }
+        }
+    }
+
+    const debounced = debounce(input_handler, 100);
+    const input = document.querySelector('input');
+    input.addEventListener('input', debounced)
+
+</script>
