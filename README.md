@@ -1,7 +1,5 @@
 ### What's this about?
 
-* Create a new Python-based application (no framework is better, if you use a framework use Tornado or Falcon)
-
 ### Task 1
 * Render the list of stores from the `stores.json` file in alphabetical order using a template.
 * Use postcodes.io to get the latitude and longitude for each postcode. Render them next to each store location in the template.
